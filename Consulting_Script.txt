@@ -1,0 +1,36 @@
+References
+1) http://www.elasticsearchtutorial.com/elasticsearch-in-5-minutes.html
+2) https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html
+
+
+pip install elasticsearch
+
+Note(Download Docker)
+
+docker network create elastic-network
+
+docker run --rm --name esn01 -p 9200:9200 -v esdata01:/usr/share/elasticsearch/data --network elastic-network -e "node.name=esn01" -e "cluster.name=stanislavs-docker-cluster" -e "cluster.initial_master_nodes=esn01" -e "bootstrap.memory_lock=true" --ulimit memlock=-1:-1 -e ES_JAVA_OPTS="-Xmx1024m -Xmx1024m" docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+
+
+curl -X PUT \
+  http://localhost:9200/park-visitation \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 3, 
+            "number_of_replicas" : 2 
+        }
+    }
+}'
+
+curl -X PUT \
+  http://localhost:9200/nba/_doc/1?pretty \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "value": "first document"
+}'
+
+Pythpn3 es.py
+
+#curl -X GET http://localhost:9200/nba-test/_search?q=Mia
